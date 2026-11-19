@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.name }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+<link rel="canonical" href="{{ site.base_url }}{{ page_url }}">
+<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ site.base_url }}{{ page_url }}">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="{{ site.accent }}">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v={{ cachebust }}">
+{% block head_extra %}{% endblock %}
+<script type="application/ld+json">{{ jsonld|safe }}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="inner">
+    <a class="brand" href="/">D<span>7</span> Solutions</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav">
+      {% for label, href in nav %}
+      <a href="{{ href }}"{% if href == page_url %} aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+{% block contact_band %}
+<section class="contact-band">
+  <div class="inner">
+    <p class="eyebrow" style="color:var(--accent-lt)">Let's Build Better</p>
+    <h2>Get a rep on your next project</h2>
+    <p class="lead">Schedule a lunch &amp; learn, request product data and submittals, or talk
+      through an assembly. We're local, responsive, and ready to help.</p>
+    <div class="btns">
+      <a class="btn primary" href="/contact/">Contact a Rep</a>
+      <a class="btn ghost" href="tel:+14027093150">Call 402.709.3150</a>
+    </div>
+    <div class="reps">
+      {% for c in contacts %}
+      <div><b>{{ c.name }}</b>{{ c.title }}<br>
+        <a href="tel:{{ c.phone_href }}">{{ c.phone }}</a> &middot;
+        <a href="mailto:{{ c.email }}">{{ c.email }}</a></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<footer class="site-foot">
+  <div class="inner">
+    <div class="terr">
+      &copy; {{ year }} {{ site.name }}. Independent manufacturers' representative.<br>
+      Representing lines in {{ covered_names[:-1]|join(', ') }} &amp; {{ covered_names[-1] }}.
+      Coverage varies by line &mdash; <a href="/territory/">see the map</a>.
+    </div>
+    <div class="flinks">
+      <a href="/lines/">Our Lines</a>
+      <a href="/territory/">Territory</a>
+      <a href="/blog/">Insights</a>
+      <a href="/contact/">Contact</a>
+      <a href="/privacy/">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t=document.querySelector('.nav-toggle'), n=document.getElementById('site-nav');
+  if(t&&n){t.addEventListener('click',function(){
+    var open=n.classList.toggle('open');
+    t.setAttribute('aria-expanded',open?'true':'false');
+  });}
+})();
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

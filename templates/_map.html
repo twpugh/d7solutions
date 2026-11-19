@@ -1,0 +1,102 @@
+{# Interactive territory map. Click a line -> its states highlight.
+   Click a state -> the lines available there. Keyboard accessible. #}
+<div class="map-wrap">
+  <div class="map-controls">
+    {% for m in map_data %}
+    <button class="mfr" type="button" data-i="{{ loop.index0 }}" aria-pressed="false"
+            style="--c:{{ m.color }}">
+      <img src="{{ m.logo }}" alt="{{ m.name }}" loading="lazy" width="178" height="30">
+      <span class="ct">{{ m.lane }}</span>
+      <span class="ns">{% if m.states %}{{ m.states|length }} state{{ '' if m.states|length == 1 else 's' }}{% else %}Territory in progress{% endif %}</span>
+    </button>
+    {% endfor %}
+    <button class="map-reset" type="button">Show full footprint</button>
+  </div>
+  <div class="map-stage">
+    <svg viewBox="{{ map_viewbox }}" role="img" aria-label="D7 Solutions territory map of the Upper Midwest and Great Plains">
+      <g id="d7-states">{{ map_paths|safe }}</g>
+      <g>{{ map_labels|safe }}</g>
+    </svg>
+    <div class="map-cap" id="d7-mapcap" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<script id="d7-map-data" type="application/json">{{ map_json|safe }}</script>
+<script>
+(function(){
+  var el=document.getElementById('d7-map-data'); if(!el) return;
+  var D=JSON.parse(el.textContent);
+  var LINES=D.lines, NAMES=D.names;
+  var cap=document.getElementById('d7-mapcap');
+  var btns=[].slice.call(document.querySelectorAll('.mfr'));
+  var stage=document.querySelector('.map-stage');
+  var sel=null;
+
+  function paths(){ return [].slice.call(document.querySelectorAll('.state')); }
+
+  function clear(){
+    paths().forEach(function(p){
+      p.classList.remove('on','foot');
+      p.style.removeProperty('--hl');
+      var l=document.getElementById('lbl-'+p.dataset.ab);
+      if(l) l.classList.remove('on');
+    });
+  }
+
+  // Full footprint = every state any line covers.
+  function footprint(){
+    clear(); sel=null;
+    btns.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+    var all={};
+    LINES.forEach(function(m){ m.states.forEach(function(s){ all[s]=1; }); });
+    paths().forEach(function(p){ if(all[p.dataset.ab]) p.classList.add('foot'); });
+    cap.innerHTML='<b>Full footprint</b> &mdash; '+Object.keys(all).length+
+      ' states. Click a line to see its territory, or click a state to see its lines.';
+  }
+
+  function showLine(i){
+    var m=LINES[i];
+    clear(); sel=i;
+    btns.forEach(function(b,j){ b.setAttribute('aria-pressed', j===i?'true':'false'); });
+    if(!m.states.length){
+      cap.innerHTML='<span class="sw" style="background:'+m.color+'"></span><b>'+m.name+
+        '</b> &mdash; '+(m.territory_note||'Territory in progress.');
+      return;
+    }
+    m.states.forEach(function(ab){
+      var p=document.getElementById('st-'+ab);
+      if(p){ p.style.setProperty('--hl',m.color); p.classList.add('on'); }
+      var l=document.getElementById('lbl-'+ab); if(l) l.classList.add('on');
+    });
+    cap.innerHTML='<span class="sw" style="background:'+m.color+'"></span><b>'+m.name+
+      '</b> &mdash; '+m.lane+'. '+m.states.map(function(s){return NAMES[s];}).join(', ')+'.';
+  }
+
+  function showState(ab){
+    clear(); sel=null;
+    btns.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+    var p=document.getElementById('st-'+ab);
+    if(p){ p.style.setProperty('--hl','#0B5FA5'); p.classList.add('on'); }
+    var l=document.getElementById('lbl-'+ab); if(l) l.classList.add('on');
+    var hits=LINES.filter(function(m){ return m.states.indexOf(ab)>-1; });
+    cap.innerHTML='<b>'+NAMES[ab]+'</b> &mdash; '+(hits.length
+      ? hits.map(function(m){
+          return '<span class="sw" style="background:'+m.color+'"></span>'+m.name;
+        }).join('&nbsp;&nbsp; ')
+      : 'no lines listed yet &mdash; <a href="/contact/">ask us</a>, our territory is growing.');
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=+b.dataset.i;
+      if(sel===i){ footprint(); } else { showLine(i); }
+    });
+  });
+  document.querySelector('.map-reset').addEventListener('click',footprint);
+  if(stage) stage.addEventListener('click',function(e){
+    var t=e.target.closest('.state'); if(t) showState(t.dataset.ab);
+  });
+
+  footprint();
+})();
+</script>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}D7 Solutions | Building Envelope Systems &mdash; Upper Midwest &amp; Great Plains{% endblock %}
+{# Lists the lanes D7 actually reps. "Roofing" was removed with Siplast —
+   D7 does not rep a roofing line, so the site must not imply one. #}
+{% block description %}D7 Solutions represents premier building-envelope manufacturers across the Upper Midwest and Great Plains &mdash; waterproofing, air and vapor barriers, wall insulation, concrete chemistry and traffic coatings.{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="inner">
+    <p class="eyebrow">Manufacturers' Representative &middot; Building Envelope Systems</p>
+    <h1>{{ site.tagline }}</h1>
+    <p>D7 Solutions represents premier building-envelope manufacturers across the Upper
+      Midwest &amp; Great Plains &mdash; helping architects, specifiers, and contractors
+      build tighter, drier, longer-lasting buildings.</p>
+    <div class="btns">
+      <a class="btn primary" href="/lines/">Explore Our Lines</a>
+      <a class="btn ghost" href="/contact/?topic=lunch-and-learn">Request a Lunch &amp; Learn</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="inner">
+    <p class="eyebrow">Our Lines</p>
+    <h2>{{ line_count_word }} trusted manufacturers, one local team</h2>
+    <p class="lead">We represent best-in-class building-envelope brands and back them with
+      local technical support, submittals, and service. Coverage varies by line &mdash;
+      contact us to confirm availability for your project.</p>
+    <div class="grid3">
+      {% for l in lines %}
+      <div class="card">
+        <div class="logobox"><img src="{{ l.logo }}" alt="{{ l.name }}" loading="lazy"></div>
+        <p class="lane" style="color:{{ l.color }}">{{ l.lane }}</p>
+        <h3>{{ l.name }}</h3>
+        <p>{{ l.blurb }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="inner">
+    <p class="eyebrow">Solutions by System</p>
+    <h2>Find the right product by what it has to do</h2>
+    <p class="lead">Focused, best-in-class systems for every part of the envelope and
+      below-grade scope.</p>
+    <div class="sysgrid">
+      {% for name, desc in systems %}
+      <div class="sys"><h3>{{ name }}</h3><p>{{ desc }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="inner">
+    <p class="eyebrow">Markets We Serve</p>
+    <h2>Built for demanding projects</h2>
+    <p class="lead">From parking structures to hospitals, our systems perform where the
+      envelope matters most.</p>
+    <div class="chips">
+      {% for m in markets %}<span class="chip">{{ m }}</span>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="inner">
+    <p class="eyebrow">Our Territory</p>
+    <h2>Coverage across the Upper Midwest &amp; Great Plains</h2>
+    <p class="lead">Click a manufacturer to see the states we represent. Click a state to
+      see its lines.</p>
+    {% include "_map.html" %}
+    <p class="lead" style="margin:22px 0 0; font-size:.92rem">
+      Coverage varies by line. Don't see your state for a product?
+      <a href="/contact/">Contact us</a> &mdash; our territory is growing.</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | D7 Solutions{% endblock %}
+{% block description %}{{ post.excerpt }}{% endblock %}
+{% block og_type %}article{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div class="inner">
+    <p class="eyebrow"><a href="/blog/" style="color:var(--accent); text-decoration:none">&larr; Insights</a></p>
+    <h1>{{ post.title }}</h1>
+    <p class="post-meta">{{ post.author }} &middot; {{ post.date_display }} &middot; {{ post.read_time }}</p>
+  </div>
+</div>
+
+<section>
+  <article class="post">
+    {{ post.body|safe }}
+  </article>
+</section>
+
+<section class="alt">
+  <div class="inner">
+    <h2>More insights</h2>
+    <div class="postlist" style="margin-top:22px">
+      {% for p in other_posts %}
+      <a class="postcard" href="{{ p.url }}">
+        <h3>{{ p.title }}</h3>
+        <p class="meta">{{ p.author }} &middot; {{ p.date_display }}</p>
+        <span class="more">Read more &rarr;</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

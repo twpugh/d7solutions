@@ -1,0 +1,56 @@
+# Preview of the site on GitHub Pages, deployed on every push to main.
+#
+# This is a preview only. Production will be Cloudflare Pages (see CUTOVER.md),
+# which serves site/ as-is at the domain root and runs functions/ for the
+# contact form. GitHub Pages serves this repo under /<repo-name>/ and cannot run
+# functions, so this workflow copies site/, rewrites root-relative links to
+# include that base path, and publishes the copy. The contact form will not
+# submit on the preview.
+
+name: Preview on GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare preview copy of site/
+        env:
+          BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          rm -rf _preview && cp -r site _preview
+          rm -f _preview/_headers _preview/_redirects
+          if [ -n "$BASE" ]; then
+            find _preview -name '*.html' -print0 | xargs -0 sed -i -E \
+              -e "s#(href|src|action)=\"/([^/\"]|\")#\1=\"$BASE/\2#g" \
+              -e "s#fetch\('/#fetch('$BASE/#g"
+          fi
+          touch _preview/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _preview
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

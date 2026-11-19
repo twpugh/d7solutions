@@ -1,0 +1,27 @@
+# Cloudflare Pages project for d7solutions.net.
+#
+# The site is pre-built and committed under site/ (python build/build.py), so
+# the Pages project needs NO build command: output directory = site.
+# Functions under functions/ are deployed alongside it automatically.
+#
+# Local preview:   npx wrangler pages dev
+# Deploy by hand:  npx wrangler pages deploy      (or connect the GitHub repo)
+
+name = "d7-site"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "site"
+
+# Leads database. Create it once in the D7 Cloudflare account:
+#   npx wrangler d1 create d7-leads
+# then paste the database_id it prints below and apply schema.sql (see CUTOVER.md, step B2).
+[[d1_databases]]
+binding = "LEADS"
+database_name = "d7-leads"
+database_id = "00000000-0000-0000-0000-000000000000"   # <- replace after `wrangler d1 create`
+
+# Non-secret alert settings. Secrets (RESEND_API_KEY) are NOT put here:
+#   npx wrangler pages secret put RESEND_API_KEY
+# or Pages > Settings > Variables and secrets in the dashboard.
+[vars]
+ALERT_TO = "rob@d7sol.com,david@d7sol.com"
+ALERT_FROM = "D7 Solutions website <website@d7solutions.net>"

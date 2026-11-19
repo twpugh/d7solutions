@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Page not found | D7 Solutions{% endblock %}
+{% block description %}That page doesn't exist. Try our lines, territory map, or contact a rep.{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div class="inner">
+    <p class="eyebrow">404</p>
+    <h1>We couldn't find that page</h1>
+    <p>The page may have moved when we rebuilt the site. Here's where most people are headed:</p>
+  </div>
+</div>
+
+<section>
+  <div class="inner">
+    <div class="grid3">
+      <a class="card" href="/lines/" style="text-decoration:none; color:inherit">
+        <h3>Our Lines</h3><p>The {{ line_count }} manufacturers we represent.</p></a>
+      <a class="card" href="/territory/" style="text-decoration:none; color:inherit">
+        <h3>Territory</h3><p>Which lines we carry in your state.</p></a>
+      <a class="card" href="/contact/" style="text-decoration:none; color:inherit">
+        <h3>Contact</h3><p>Get a rep on your project.</p></a>
+    </div>
+  </div>
+</section>
+{% endblock %}

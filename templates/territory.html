@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Territory | D7 Solutions{% endblock %}
+{% block description %}D7 Solutions represents building-envelope lines in {{ covered_names|join(', ') }}. Coverage varies by manufacturer &mdash; see which lines we represent in your state.{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div class="inner">
+    <p class="eyebrow">Our Territory</p>
+    <h1>Where we represent, line by line</h1>
+    <p>Click a manufacturer to see the states we cover for it. Click a state to see which
+      lines are available there.</p>
+  </div>
+</div>
+
+<section>
+  <div class="inner">
+    {% include "_map.html" %}
+  </div>
+</section>
+
+<section class="alt">
+  <div class="inner">
+    <h2>Coverage at a glance</h2>
+    <p class="lead">Territory varies by line. This table is the same data as the map above.</p>
+    <div style="overflow-x:auto">
+      <table style="width:100%; border-collapse:collapse; font-size:.94rem; min-width:640px">
+        <thead>
+          <tr style="border-bottom:2px solid var(--line); text-align:left">
+            <th style="padding:10px 12px">Line</th>
+            <th style="padding:10px 12px">Lane</th>
+            {% for ab in state_order %}
+            <th style="padding:10px 8px; text-align:center">{{ ab }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in lines %}
+          <tr style="border-bottom:1px solid var(--line)">
+            <td style="padding:10px 12px; font-weight:700">
+              <a href="/lines/#{{ l.slug }}" style="text-decoration:none; color:{{ l.color }}">{{ l.name }}</a>
+            </td>
+            <td style="padding:10px 12px; color:var(--muted)">{{ l.lane }}</td>
+            {% for ab in state_order %}
+            <td style="padding:10px 8px; text-align:center">
+              {% if ab in l.states %}<span aria-label="covered" style="color:{{ l.color }}; font-weight:700">&#9679;</span>
+              {% else %}<span aria-label="not covered" style="color:#d8dee6">&ndash;</span>{% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="lead" style="margin:20px 0 0; font-size:.92rem">
+      Don't see your state for a product? <a href="/contact/">Contact us</a> &mdash;
+      our territory is growing.</p>
+  </div>
+</section>
+{% endblock %}

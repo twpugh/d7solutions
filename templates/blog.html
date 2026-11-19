@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Insights | D7 Solutions{% endblock %}
+{% block description %}Notes on building-envelope performance, Division 7 systems, and specifying assemblies that stay tight and dry.{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div class="inner">
+    <p class="eyebrow">Insights</p>
+    <h1>Notes from the envelope</h1>
+    <p>Thoughts on Division 7 systems, weather-control layers, and building assemblies
+      that hold up.</p>
+  </div>
+</div>
+
+<section>
+  <div class="inner">
+    <div class="postlist">
+      {% for p in posts %}
+      <a class="postcard" href="{{ p.url }}">
+        <h3>{{ p.title }}</h3>
+        <p class="meta">{{ p.author }} &middot; {{ p.date_display }} &middot; {{ p.read_time }}</p>
+        <p>{{ p.excerpt }}</p>
+        <span class="more">Read more &rarr;</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

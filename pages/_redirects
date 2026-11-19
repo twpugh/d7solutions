@@ -1,0 +1,32 @@
+# Retired Wix URL shapes -> nearest live page (copied to site/_redirects by build.py).
+# Kept so inbound links and search results from the old Wix site survive.
+# Pages does NOT strip a trailing slash before matching, so both forms are listed.
+
+/portfolio                 /lines/    301
+/portfolio/                /lines/    301
+/portfolio/*               /lines/    301
+/portfolio-collections     /lines/    301
+/portfolio-collections/    /lines/    301
+/portfolio-collections/*   /lines/    301
+/event-list                /contact/  301
+/event-list/               /contact/  301
+/events                    /contact/  301
+/events/                   /contact/  301
+/groups                    /          301
+/groups/                   /          301
+/members                   /          301
+/members/                  /          301
+/blank                     /privacy/  301
+/blank/                    /privacy/  301
+/blank-1                   /privacy/  301
+/blank-1/                  /privacy/  301
+/blank-2                   /privacy/  301
+/blank-2/                  /privacy/  301
+/blank-3                   /privacy/  301
+/blank-3/                  /privacy/  301
+/blog-feed                 /blog/     301
+/blog-feed/                /blog/     301
+/welcome                   /          301
+/welcome/                  /          301
+/home                      /          301
+/home/                     /          301

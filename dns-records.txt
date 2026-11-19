@@ -1,0 +1,18 @@
+DNS records to create in the new d7solutions.net zone (CUTOVER.md step C2)
+==========================================================================
+
+Add exactly these two. Do not add anything for the root (d7solutions.net) or
+www: the Pages custom-domain step (C4) creates those itself.
+
+1) Type CNAME   Name _domainconnect   Target _domainconnect.gd.domaincontrol.com   Proxy: OFF (DNS only)
+   (GoDaddy Domain Connect discovery; harmless.)
+
+2) Type TXT     Name _dmarc           Content:
+   v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;
+   (No email is sent from @d7solutions.net; this tells receivers to quarantine anything that claims to be.)
+
+There is no MX record and no SPF record: the domain carries no email.
+DNSSEC: off. Leave it off until a week after go-live (CUTOVER.md C0).
+
+If Resend is ever verified on d7solutions.net instead of d7sol.com, Resend
+will give you additional TXT/CNAME records to add here.

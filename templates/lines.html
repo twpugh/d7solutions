@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Our Lines | D7 Solutions{% endblock %}
+{# Derived from LINES, never typed — a hand-written list here kept naming
+   Siplast after it was removed from the site everywhere else. #}
+{% block description %}The manufacturers D7 Solutions represents: {{ lines[:-1] | map(attribute='name') | join(', ') }} and {{ lines[-1].name }} &mdash; with the territory we cover for each.{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div class="inner">
+    <p class="eyebrow">Our Lines</p>
+    <h1>{{ line_count_word }} trusted manufacturers</h1>
+    <p>Each line covers one lane of the envelope. We back all of them with local technical
+      support, submittals, and service &mdash; from design assist through installation.</p>
+  </div>
+</div>
+
+<section>
+  <div class="inner">
+    {% for l in lines %}
+    <article class="linerow" id="{{ l.slug }}">
+      <div class="lmark"><img src="{{ l.logo }}" alt="{{ l.name }} logo" loading="lazy"></div>
+      <div>
+        <p class="lane" style="color:{{ l.color }}">{{ l.lane }}</p>
+        <h2>{{ l.name }}</h2>
+        <p>{{ l.detail }}</p>
+        {% if l.states %}
+        <p class="terr-list"><b>Territory:</b>
+          {{ l.states | map('state_name') | join(', ') }}</p>
+        {% else %}
+        <p class="terr-note">{{ l.territory_note }}</p>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="alt">
+  <div class="inner">
+    <p class="eyebrow">Solutions by System</p>
+    <h2>Or start from what it has to do</h2>
+    <p class="lead">Not sure which line fits? Start from the assembly.</p>
+    <div class="sysgrid">
+      {% for name, desc in systems %}
+      <div class="sys"><h3>{{ name }}</h3><p>{{ desc }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
