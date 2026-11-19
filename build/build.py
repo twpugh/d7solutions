@@ -118,8 +118,17 @@ def map_context():
     # 4-value SVG form — a bare "[760, 810.2]" is invalid, and the browser
     # silently discards it and draws the map unscaled (i.e. cropped to the
     # top-left corner) rather than erroring.
-    vb = P["viewBox"]
-    viewbox = vb if isinstance(vb, str) else f"0 0 {vb[0]} {vb[1]}"
+    # Crop the viewBox to the states actually drawn, so dropping a state from
+    # STATE_ORDER doesn't leave an empty band where it used to be. Paths are
+    # absolute M/L commands, so every number pair is a point.
+    xs, ys = [], []
+    for ab in C.STATE_ORDER:
+        nums = [float(n) for n in re.findall(r"-?\d+(?:\.\d+)?", states[ab]["d"])]
+        xs += nums[0::2]
+        ys += nums[1::2]
+    pad = 8
+    x0, y0 = min(xs) - pad, min(ys) - pad
+    viewbox = f"{x0:.1f} {y0:.1f} {max(xs) - x0 + pad:.1f} {max(ys) - y0 + pad:.1f}"
 
     return {
         "map_viewbox": viewbox,
@@ -197,7 +206,11 @@ def main():
         "lines": C.LINES,
         "systems": C.SYSTEMS,
         "markets": C.MARKETS,
-        "state_order": C.STATE_ORDER,
+        # Table columns: most lines covered first; ties keep STATE_ORDER.
+        "state_order": sorted(
+            C.STATE_ORDER,
+            key=lambda ab: -sum(ab in l["states"] for l in C.LINES),
+        ),
         "year": date.today().year,
         "cachebust": cachebust,
         "jsonld": org_jsonld,

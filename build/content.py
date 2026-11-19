@@ -145,9 +145,12 @@ MARKETS = [
 
 STATE_NAMES = {
     "ND": "North Dakota", "SD": "South Dakota", "MN": "Minnesota", "WI": "Wisconsin",
-    "IA": "Iowa", "NE": "Nebraska", "KS": "Kansas", "MO": "Missouri",
+    "IA": "Iowa", "NE": "Nebraska",
 }
-STATE_ORDER = ["ND", "SD", "MN", "WI", "IA", "NE", "KS", "MO"]
+# Kansas and Missouri removed 2026-11-19 (Wayne): not shown on the map or table.
+# The territory table orders its columns by coverage (most lines first); see
+# build.py. This list is the tie-break order and the map/footer order.
+STATE_ORDER = ["ND", "SD", "MN", "WI", "IA", "NE"]
 
 NAV = [
     ("Home", "/"),
